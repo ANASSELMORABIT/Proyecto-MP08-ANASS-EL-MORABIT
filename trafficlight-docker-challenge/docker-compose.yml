@@ -1,0 +1,121 @@
+#Parte 1
+
+# version: '3.8'
+
+# services:
+#   # Red app
+#   red-app:
+#     image: trafficlight/red:v1.0
+#     container_name: red-app
+#     networks:
+#       traffic-light:
+#         ipv4_address: 172.20.0.10
+#     expose:
+#       - "80"
+
+#   # Yellow app
+#   yellow-app:
+#     image: trafficlight/yellow:v1.0
+#     container_name: yellow-app
+#     networks:
+#       traffic-light:
+#         ipv4_address: 172.20.0.11
+#     expose:
+#       - "80"
+
+#   # Green app
+#   green-app:
+#     image: trafficlight/green:v1.0
+#     container_name: green-app
+#     networks:
+#       traffic-light:
+#         ipv4_address: 172.20.0.12
+#     expose:
+#       - "80"
+
+#   # Nginx proxy
+#   nginx-proxy:
+#     image: nginx:1.21
+#     container_name: nginx-proxy
+#     networks:
+#       traffic-light:
+#         ipv4_address: 172.20.0.20
+#     ports:
+#       - "3000:3000"
+#       - "4000:4000"
+#       - "5000:5000"
+#     volumes:
+#       - ./nginx/conf.d:/etc/nginx/conf.d
+#     depends_on:
+#       - red-app
+#       - yellow-app
+#       - green-app
+
+# networks:
+#   traffic-light:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: "172.20.0.0/16"
+
+
+
+# Parte 2 :
+
+
+
+
+
+# Define la versión del archivo de configuración de Docker Compose.
+# La versión '3.9' es una de las versiones más recientes que permite usar las funcionalidades más avanzadas.
+version: '3.9'
+
+# Definimos las redes que los contenedores usarán.
+# Aquí se crea una red llamada `traffic-light` con el driver 'bridge', que es el más común para contenedores en redes locales.
+# También se define una configuración IP para la red.
+networks:
+  traffic-light:
+    driver: bridge  # El driver 'bridge' permite que los contenedores se comuniquen entre sí a través de una red virtual.
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16  # Se define un rango de direcciones IP para la red.
+          gateway: 172.20.0.1     # La dirección IP del gateway para la red (puente entre contenedores y el mundo exterior).
+
+# Define los servicios que componen la infraestructura.
+services:
+  # Servicio para la aplicación 'red-app'
+  red-app:
+    image: trafficlight/red:v1.0  # Define la imagen de Docker que se utilizará para crear el contenedor.
+    container_name: red-app  # El nombre del contenedor será 'red-app'.
+    networks:
+      traffic-light:
+        ipv4_address: 172.20.0.11  # Asigna una dirección IP estática dentro de la red `traffic-light` al contenedor.
+
+  # Servicio para la aplicación 'yellow-app'
+  yellow-app:
+    image: trafficlight/yellow:v1.0  # Define la imagen de Docker para la aplicación amarilla.
+    container_name: yellow-app  # El nombre del contenedor será 'yellow-app'.
+    networks:
+      traffic-light:
+        ipv4_address: 172.20.0.12  # Asigna una dirección IP estática dentro de la red `traffic-light`.
+
+  # Servicio para la aplicación 'green-app'
+  green-app:
+    image: trafficlight/green:v1.0  # Define la imagen de Docker para la aplicación verde.
+    container_name: green-app  # El nombre del contenedor será 'green-app'.
+    networks:
+      traffic-light:
+        ipv4_address: 172.20.0.13  # Asigna una dirección IP estática dentro de la red `traffic-light`.
+
+  # Servicio para el contenedor de Nginx, que actuará como proxy inverso y balanceador de carga.
+  nginx-proxy:
+    image: nginx:1.21  # Utiliza la imagen de Nginx versión 1.21.
+    container_name: nginx-proxy  # El nombre del contenedor será 'nginx-proxy'.
+    ports:
+      - "3000:3000"  # Mapea el puerto 3000 del contenedor al puerto 3000 del host, para que el proxy escuche en el puerto 3000.
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d  # Monta el directorio local './nginx/conf.d' dentro del contenedor, para la configuración de Nginx.
+    networks:
+      traffic-light:
+        ipv4_address: 172.20.0.2  # Asigna una dirección IP estática para el contenedor de Nginx en la red `traffic-light`.
