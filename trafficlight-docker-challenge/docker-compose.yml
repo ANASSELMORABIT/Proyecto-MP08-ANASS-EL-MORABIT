@@ -5,7 +5,9 @@
 # services:
 #   # Red app
 #   red-app:
-#     image: trafficlight/red:v1.0
+#     build: 
+#       context: ./red
+#       dockerfile: Dockerfile
 #     container_name: red-app
 #     networks:
 #       traffic-light:
@@ -15,7 +17,9 @@
 
 #   # Yellow app
 #   yellow-app:
-#     image: trafficlight/yellow:v1.0
+#     build: 
+#       context: ./yellow
+#       dockerfile: Dockerfile
 #     container_name: yellow-app
 #     networks:
 #       traffic-light:
@@ -25,7 +29,9 @@
 
 #   # Green app
 #   green-app:
-#     image: trafficlight/green:v1.0
+#     build: 
+#       context: ./green
+#       dockerfile: Dockerfile
 #     container_name: green-app
 #     networks:
 #       traffic-light:
@@ -86,7 +92,9 @@ networks:
 services:
   # Servicio para la aplicación 'red-app'
   red-app:
-    image: trafficlight/red:v1.0  # Define la imagen de Docker que se utilizará para crear el contenedor.
+    build:
+      context: ./red  # Define el contexto de construcción, que es la ruta al Dockerfile y los archivos necesarios para construir la imagen.
+      dockerfile: Dockerfile  # Especifica el nombre del Dockerfile a usar para construir la imagen.
     container_name: red-app  # El nombre del contenedor será 'red-app'.
     networks:
       traffic-light:
@@ -94,7 +102,9 @@ services:
 
   # Servicio para la aplicación 'yellow-app'
   yellow-app:
-    image: trafficlight/yellow:v1.0  # Define la imagen de Docker para la aplicación amarilla.
+    build:
+      context: ./yellow 
+      dockerfile: Dockerfile 
     container_name: yellow-app  # El nombre del contenedor será 'yellow-app'.
     networks:
       traffic-light:
@@ -102,7 +112,9 @@ services:
 
   # Servicio para la aplicación 'green-app'
   green-app:
-    image: trafficlight/green:v1.0  # Define la imagen de Docker para la aplicación verde.
+    build:
+      context: ./green  # Define el contexto de construcción, que es la ruta al Dockerfile y los archivos necesarios para construir la imagen.
+      dockerfile: Dockerfile  # Especifica el nombre del Dockerfile a usar para construir la imagen.
     container_name: green-app  # El nombre del contenedor será 'green-app'.
     networks:
       traffic-light:
